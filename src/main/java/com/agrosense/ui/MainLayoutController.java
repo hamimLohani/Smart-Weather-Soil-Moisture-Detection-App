@@ -22,10 +22,12 @@ public class MainLayoutController {
     @FXML private Button navAlerts;
     @FXML private Button navHistory;
     @FXML private Button navAccount;
+    @FXML private Button themeToggleButton;
 
     @FXML
     public void initialize() {
         showDashboard();
+        updateThemeButtonText();
     }
 
     @FXML private void showDashboard()    { loadView("dashboard",    navDashboard); }
@@ -38,6 +40,18 @@ public class MainLayoutController {
     private void onSignOut() {
         SessionManager.getInstance().logout();
         AgroSenseApp.navigateTo("login");
+    }
+
+    @FXML
+    private void onToggleTheme() {
+        ThemeManager.toggleTheme(contentPane.getScene().getRoot());
+        updateThemeButtonText();
+    }
+
+    private void updateThemeButtonText() {
+        if (themeToggleButton != null) {
+            themeToggleButton.setText(ThemeManager.isLightMode() ? "🌙 Dark Mode" : "☀️ Light Mode");
+        }
     }
 
     private void loadView(String fxmlName, Button activeButton) {

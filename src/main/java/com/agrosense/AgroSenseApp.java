@@ -103,6 +103,7 @@ public class AgroSenseApp extends Application {
             FXMLLoader loader = new FXMLLoader(
                 AgroSenseApp.class.getResource("/fxml/" + fxmlName + ".fxml"));
             Parent root = loader.load();
+            com.agrosense.ui.ThemeManager.applyTheme(root);
             Scene scene = primaryStage.getScene();
             if (scene == null) {
                 scene = new Scene(root, 1200, 760);

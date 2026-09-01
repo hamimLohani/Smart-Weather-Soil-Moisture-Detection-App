@@ -5,7 +5,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 /* ── Color tokens ──────────────────────────────────────────────────── */
-* {
+.root {
+    -color-auth-bg-start: #0d1117;
+    -color-auth-bg-end: #111827;
+    -color-btn-text: #0d1117;
     -color-bg-base:       #0d1117;
     -color-bg-card:       #161b22;
     -color-bg-elevated:   #1f2937;
@@ -21,6 +24,27 @@
     -color-text-muted:    #484f58;
     -color-sidebar:       #0d1117;
     -fx-font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+
+.light-theme {
+    -color-bg-base:       #f3f4f6;
+    -color-bg-card:       #ffffff;
+    -color-bg-elevated:   #e5e7eb;
+    -color-border:        #d1d5db;
+    -color-accent:        #16a34a;
+    -color-accent-dim:    #bbf7d0;
+    -color-accent-glow:   rgba(22, 163, 74, 0.15);
+    -color-warn:          #d97706;
+    -color-danger:        #dc2626;
+    -color-danger-dim:    #fecaca;
+    -color-text-primary:  #111827;
+    -color-text-secondary:#4b5563;
+    -color-text-muted:    #9ca3af;
+    -color-sidebar:       #ffffff;
+    -color-auth-bg-start: #f3f4f6;
+    -color-auth-bg-end:   #e5e7eb;
+    -color-btn-text:      #ffffff;
 }
 
 /* ── Root / Scene ─────────────────────────────────────────────────── */
@@ -173,7 +197,7 @@
 /* ── Buttons ────────────────────────────────────────────────────────── */
 .btn-primary {
     -fx-background-color: -color-accent;
-    -fx-text-fill: #0d1117;
+    -fx-text-fill: -color-btn-text;
     -fx-font-weight: 700;
     -fx-font-size: 13px;
     -fx-padding: 10 24;
@@ -213,7 +237,7 @@
 }
 .btn-warn {
     -fx-background-color: -color-warn;
-    -fx-text-fill: #0d1117;
+    -fx-text-fill: -color-btn-text;
     -fx-font-weight: 700;
     -fx-font-size: 13px;
     -fx-padding: 8 18;
@@ -384,7 +408,7 @@
 
 /* ── Login / Register screens ────────────────────────────────────────── */
 .auth-container {
-    -fx-background-color: linear-gradient(to bottom right, #0d1117, #111827);
+    -fx-background-color: linear-gradient(to bottom right, -color-auth-bg-start, -color-auth-bg-end);
     -fx-alignment: center;
     -fx-min-width: 100%;
     -fx-min-height: 100%;

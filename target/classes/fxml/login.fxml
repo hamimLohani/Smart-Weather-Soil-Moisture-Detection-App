@@ -9,7 +9,7 @@
            alignment="CENTER">
 
     <VBox styleClass="auth-card" spacing="0" alignment="CENTER"
-          maxWidth="440" StackPane.alignment="CENTER">
+          maxWidth="440" maxHeight="-Infinity" StackPane.alignment="CENTER">
 
         <!-- Logo -->
         <VBox alignment="CENTER" spacing="4">
@@ -70,4 +70,10 @@
         </VBox>
 
     </VBox>
+
+    <Button fx:id="themeToggleButton" text="☀️" styleClass="btn-icon" onAction="#onToggleTheme" StackPane.alignment="TOP_RIGHT">
+        <StackPane.margin>
+            <Insets top="20" right="20"/>
+        </StackPane.margin>
+    </Button>
 </StackPane>

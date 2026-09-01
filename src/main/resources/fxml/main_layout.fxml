@@ -22,6 +22,7 @@
             <Button fx:id="navAccount"    text="👤  Account"       styleClass="nav-button" onAction="#showAccount"    maxWidth="220"/>
             <Region VBox.vgrow="ALWAYS"/>
             <Separator/>
+            <Button fx:id="themeToggleButton" text="🌙 Dark Mode" styleClass="nav-button" onAction="#onToggleTheme" maxWidth="220"/>
             <Button text="Sign Out" styleClass="nav-button" onAction="#onSignOut" maxWidth="220"/>
         </VBox>
     </left>

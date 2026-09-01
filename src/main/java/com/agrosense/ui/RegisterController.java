@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 
 public class RegisterController {
 
@@ -27,6 +28,7 @@ public class RegisterController {
     @FXML private Label critDigit;
     @FXML private Label critSpecial;
     @FXML private Label critNoSpaces;
+    @FXML private Button themeToggleButton;
 
     @FXML
     public void initialize() {
@@ -37,6 +39,21 @@ public class RegisterController {
             checkMatch();
         });
         confirmPasswordField.textProperty().addListener((obs, old, newVal) -> checkMatch());
+        updateThemeButton();
+    }
+
+    @FXML
+    private void onToggleTheme() {
+        if (themeToggleButton.getScene() != null) {
+            ThemeManager.toggleTheme(themeToggleButton.getScene().getRoot());
+            updateThemeButton();
+        }
+    }
+
+    private void updateThemeButton() {
+        if (themeToggleButton != null) {
+            themeToggleButton.setText(ThemeManager.isLightMode() ? "🌙" : "☀️");
+        }
     }
 
     @FXML

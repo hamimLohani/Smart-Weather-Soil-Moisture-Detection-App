@@ -7,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 
 import java.util.Optional;
 
@@ -15,6 +16,26 @@ public class LoginController {
     @FXML private TextField     emailField;
     @FXML private PasswordField passwordField;
     @FXML private Label         errorLabel;
+    @FXML private Button        themeToggleButton;
+
+    @FXML
+    public void initialize() {
+        updateThemeButton();
+    }
+
+    @FXML
+    private void onToggleTheme() {
+        if (themeToggleButton.getScene() != null) {
+            ThemeManager.toggleTheme(themeToggleButton.getScene().getRoot());
+            updateThemeButton();
+        }
+    }
+
+    private void updateThemeButton() {
+        if (themeToggleButton != null) {
+            themeToggleButton.setText(ThemeManager.isLightMode() ? "🌙" : "☀️");
+        }
+    }
 
     @FXML
     private void onLogin() {
