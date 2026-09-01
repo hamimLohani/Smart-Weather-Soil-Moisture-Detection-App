@@ -8,14 +8,13 @@ import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
+
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class DashboardController {
@@ -25,7 +24,7 @@ public class DashboardController {
     @FXML private Label alertCountLabel;
     @FXML private ListView<String> recentAlertsList;
 
-    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("MMM d, HH:mm");
+
 
     @FXML
     public void initialize() {

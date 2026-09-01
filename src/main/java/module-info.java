@@ -1,10 +1,12 @@
 module com.agrosense {
     requires javafx.controls;
     requires javafx.fxml;
-    requires java.sql;
+    requires transitive java.sql;
     requires org.xerial.sqlitejdbc;
     requires com.fasterxml.jackson.databind;
     requires jdk.httpserver;
+    requires java.prefs;
+    requires transitive javafx.graphics;
 
     opens com.agrosense to javafx.fxml;
     opens com.agrosense.ui to javafx.fxml;

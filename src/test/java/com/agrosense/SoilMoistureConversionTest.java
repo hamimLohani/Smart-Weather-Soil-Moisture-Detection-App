@@ -1,7 +1,7 @@
 package com.agrosense;
 
 import com.agrosense.model.DeviceUnit;
-import com.agrosense.model.DeviceStatus;
+
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

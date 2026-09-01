@@ -1,9 +1,12 @@
 package com.agrosense.ui;
 
 import javafx.scene.Parent;
+import java.util.prefs.Preferences;
 
 public class ThemeManager {
-    private static boolean isLightMode = false;
+    private static final String PREF_KEY = "isLightMode";
+    private static Preferences prefs = Preferences.userNodeForPackage(ThemeManager.class);
+    private static boolean isLightMode = prefs.getBoolean(PREF_KEY, false);
 
     public static boolean isLightMode() {
         return isLightMode;
@@ -11,10 +14,11 @@ public class ThemeManager {
 
     public static void setLightMode(boolean lightMode) {
         isLightMode = lightMode;
+        prefs.putBoolean(PREF_KEY, lightMode);
     }
 
     public static void toggleTheme(Parent root) {
-        isLightMode = !isLightMode;
+        setLightMode(!isLightMode);
         applyTheme(root);
     }
 

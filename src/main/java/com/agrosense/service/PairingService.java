@@ -6,7 +6,7 @@ import com.agrosense.dao.PairingCodeDAO;
 import com.agrosense.dao.SiteDAO;
 import com.agrosense.model.*;
 import com.agrosense.pairing.*;
-import com.agrosense.state.PairedState;
+
 import com.agrosense.state.UnpairedState;
 
 import java.sql.SQLException;

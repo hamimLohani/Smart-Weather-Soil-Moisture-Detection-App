@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+
 import java.util.List;
 
 public class AlertHistoryController {

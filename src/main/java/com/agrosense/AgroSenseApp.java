@@ -48,7 +48,6 @@ public class AgroSenseApp extends Application {
 
         // DAOs
         var customerDAO       = new CustomerDAO();
-        var productDAO        = new ProductDAO();
         var siteDAO           = new SiteDAO();
         var deviceUnitDAO     = new DeviceUnitDAO();
         var pairingCodeDAO    = new PairingCodeDAO();

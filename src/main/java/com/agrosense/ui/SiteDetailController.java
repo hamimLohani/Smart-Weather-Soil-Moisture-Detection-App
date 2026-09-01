@@ -3,7 +3,7 @@ package com.agrosense.ui;
 import com.agrosense.AgroSenseApp;
 import com.agrosense.model.*;
 import com.agrosense.session.SessionManager;
-import javafx.collections.FXCollections;
+
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
@@ -30,7 +30,7 @@ public class SiteDetailController {
     private Site site;
     private int deviceUnitId = -1;
     private static final DateTimeFormatter FMT_AXIS = DateTimeFormatter.ofPattern("MM/dd HH:mm");
-    private static final DateTimeFormatter FMT_LABEL = DateTimeFormatter.ofPattern("HH:mm:ss");
+
 
     public void setSite(Site site) {
         this.site = site;

@@ -23,6 +23,9 @@
 
     <!-- Rules table -->
     <TableView fx:id="rulesTable" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+        </columnResizePolicy>
         <columns>
             <TableColumn fx:id="colType"      text="READING TYPE" prefWidth="160"/>
             <TableColumn fx:id="colOperator"  text="CONDITION"    prefWidth="120"/>

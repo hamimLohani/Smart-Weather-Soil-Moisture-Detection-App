@@ -4,10 +4,10 @@ import com.agrosense.dao.DeviceUnitDAO;
 import com.agrosense.dao.PairingCodeDAO;
 import com.agrosense.model.*;
 import com.agrosense.pairing.*;
-import org.junit.jupiter.api.BeforeEach;
+
 import org.junit.jupiter.api.Test;
 
-import java.sql.SQLException;
+
 import java.time.LocalDate;
 import java.util.Optional;
 

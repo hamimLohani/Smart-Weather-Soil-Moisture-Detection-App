@@ -2,7 +2,7 @@ package com.agrosense.ingest;
 
 import com.agrosense.dao.DevicePairingDAO;
 import com.agrosense.dao.DeviceUnitDAO;
-import com.agrosense.dao.SensorReadingDAO;
+
 import com.agrosense.model.*;
 import com.agrosense.service.AlertService;
 import com.agrosense.service.SensorReadingService;
