@@ -5,7 +5,7 @@ monitoring devices, built for the Design Patterns Lab Final Project.
 
 ## Team
 
-| Name | Role / Contributions |
+| Name | Roll |
 |------------------------------|---------|
 | Md Inzamamul Lohani | 1639 |
 | Akeaid Moonjin Dayeen | 1640 |
