@@ -80,7 +80,7 @@ SQLite database with 8 core tables:
 
 Full schema with constraints and foreign keys is in
 [`/db/schema.sql`](./db/schema.sql). An ER diagram is provided in
-[`/docs/er-diagram.png`](./docs/er-diagram.png).
+[`/docs/er-diagram.md`](./docs/er-diagram.md).
 
 ## Architecture
 
@@ -169,7 +169,7 @@ hardware.
 
 - [`/docs/design-patterns.md`](./docs/design-patterns.md) — pattern
   justifications
-- [`/docs/er-diagram.png`](./docs/er-diagram.png) — database ER diagram
-- [`/docs/class-diagrams/`](./docs/class-diagrams/) — UML class diagrams for
+- [`/docs/er-diagram.md`](./docs/er-diagram.md) — database ER diagram
+- [`/docs/class-diagrams/architecture.md`](./docs/class-diagrams/architecture.md) — UML class diagrams for
   major design decisions
 - [`/db/schema.sql`](./db/schema.sql) — full SQLite schema
