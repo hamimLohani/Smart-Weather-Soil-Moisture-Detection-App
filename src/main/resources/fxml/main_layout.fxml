@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.agrosense.ui.MainLayoutController"
+            prefWidth="1200" prefHeight="760">
+
+    <!-- Sidebar -->
+    <left>
+        <VBox styleClass="sidebar" fx:id="sidebar">
+            <VBox spacing="2">
+                <Label text="🌱 AgroSense" styleClass="sidebar-logo"/>
+                <Label text="Soil &amp; Weather Monitor" styleClass="sidebar-subtitle"/>
+            </VBox>
+            <Separator/>
+            <Button fx:id="navDashboard"  text="📊  Dashboard"     styleClass="nav-button" onAction="#showDashboard"  maxWidth="220"/>
+            <Button fx:id="navPairing"    text="📡  Pair Device"   styleClass="nav-button" onAction="#showPairing"    maxWidth="220"/>
+            <Button fx:id="navAlerts"     text="🔔  Alert Rules"   styleClass="nav-button" onAction="#showAlertRules" maxWidth="220"/>
+            <Button fx:id="navHistory"    text="📜  Alert History" styleClass="nav-button" onAction="#showAlertHistory" maxWidth="220"/>
+            <Button fx:id="navAccount"    text="👤  Account"       styleClass="nav-button" onAction="#showAccount"    maxWidth="220"/>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Separator/>
+            <Button text="Sign Out" styleClass="nav-button" onAction="#onSignOut" maxWidth="220"/>
+        </VBox>
+    </left>
+
+    <!-- Dynamic content area -->
+    <center>
+        <StackPane fx:id="contentPane" styleClass="content-area"/>
+    </center>
+
+</BorderPane>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.agrosense.ui.DashboardController"
+      spacing="0" styleClass="content-area">
+
+    <!-- Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="2">
+            <Label text="Dashboard" styleClass="title-large"/>
+            <Label fx:id="subtitleLabel" text="Your sites at a glance" styleClass="label-secondary"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="alertCountLabel" text="" styleClass="badge-open"/>
+        <Button text="＋ Pair Device" styleClass="btn-primary" onAction="#onPairDevice"/>
+    </HBox>
+
+    <Region prefHeight="20"/>
+
+    <!-- Sites grid — dynamically populated -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+        <FlowPane fx:id="sitesContainer" hgap="16" vgap="16"
+                  prefWrapLength="900" styleClass="content-area"/>
+    </ScrollPane>
+
+    <!-- Recent alerts strip -->
+    <VBox spacing="8">
+        <Label text="Recent Alerts" styleClass="title-medium"/>
+        <ListView fx:id="recentAlertsList" maxHeight="150" styleClass="table-view"/>
+    </VBox>
+
+</VBox>

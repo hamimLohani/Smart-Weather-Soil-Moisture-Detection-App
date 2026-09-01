@@ -1,0 +1,4 @@
+--patch-module
+com.agrosense=_
+--add-reads
+com.agrosense=ALL-UNNAMED

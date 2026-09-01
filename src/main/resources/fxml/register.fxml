@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.agrosense.ui.RegisterController"
+           styleClass="auth-container"
+           alignment="CENTER">
+
+    <HBox alignment="CENTER" spacing="32" StackPane.alignment="CENTER">
+
+        <!-- Left: Form card -->
+        <VBox styleClass="auth-card" spacing="0" alignment="TOP_LEFT" prefWidth="400">
+
+            <VBox alignment="CENTER" spacing="4">
+                <Label text="🌱 AgroSense" styleClass="auth-logo"/>
+                <Label text="Smart Soil &amp; Weather Monitoring" styleClass="auth-tagline"/>
+            </VBox>
+
+            <Region prefHeight="20"/>
+
+            <Label text="Create your account" styleClass="title-medium"/>
+            <Label text="Start monitoring your sites right away" styleClass="label-secondary"/>
+
+            <Region prefHeight="16"/>
+
+            <!-- Name -->
+            <VBox spacing="5">
+                <Label text="Full name" styleClass="field-label"/>
+                <TextField fx:id="nameField" promptText="Alice Nguyen"
+                           styleClass="text-field" maxWidth="340"/>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- Phone -->
+            <VBox spacing="5">
+                <Label text="Phone (optional)" styleClass="field-label"/>
+                <TextField fx:id="phoneField" promptText="+1-555-0000"
+                           styleClass="text-field" maxWidth="340"/>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- Email -->
+            <VBox spacing="5">
+                <Label text="Email address" styleClass="field-label"/>
+                <TextField fx:id="emailField" promptText="you@example.com"
+                           styleClass="text-field" maxWidth="340"/>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- Password -->
+            <VBox spacing="5">
+                <Label text="Password" styleClass="field-label"/>
+                <PasswordField fx:id="passwordField" promptText="Create a strong password"
+                               styleClass="text-field" maxWidth="340"/>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Strength:" styleClass="label-muted"/>
+                    <Label fx:id="strengthLabel" text="" styleClass="label-secondary"/>
+                </HBox>
+            </VBox>
+
+            <Region prefHeight="10"/>
+
+            <!-- Confirm Password -->
+            <VBox spacing="5">
+                <Label text="Confirm password" styleClass="field-label"/>
+                <PasswordField fx:id="confirmPasswordField" promptText="Re-enter your password"
+                               styleClass="text-field" maxWidth="340"/>
+                <Label fx:id="matchLabel" text="" styleClass="error-label"
+                       managed="false" visible="false"/>
+            </VBox>
+
+            <Region prefHeight="6"/>
+
+            <!-- Error -->
+            <Label fx:id="errorLabel" styleClass="error-label" text=""
+                   managed="false" visible="false" maxWidth="340" wrapText="true"/>
+
+            <Region prefHeight="14"/>
+
+            <Button fx:id="registerButton" text="Create Account" styleClass="btn-primary"
+                    onAction="#onRegister" maxWidth="340" prefHeight="42"/>
+
+            <Region prefHeight="12"/>
+
+            <HBox alignment="CENTER" spacing="6">
+                <Label text="Already have an account?" styleClass="label-secondary"/>
+                <Button text="Sign in" styleClass="link-button" onAction="#goToLogin"/>
+            </HBox>
+
+        </VBox>
+
+        <!-- Right: Password criteria card -->
+        <VBox styleClass="card" spacing="12" prefWidth="280" alignment="TOP_LEFT">
+            <Label text="🔒 Password Requirements" styleClass="title-medium"/>
+            <Label text="All criteria must be met:" styleClass="label-secondary" wrapText="true"/>
+
+            <VBox spacing="10">
+                <Label fx:id="crit8chars"   text="○  At least 8 characters"               styleClass="label-secondary"/>
+                <Label fx:id="critUpper"    text="○  At least 1 uppercase (A–Z)"           styleClass="label-secondary"/>
+                <Label fx:id="critLower"    text="○  At least 1 lowercase (a–z)"           styleClass="label-secondary"/>
+                <Label fx:id="critDigit"    text="○  At least 1 digit (0–9)"               styleClass="label-secondary"/>
+                <Label fx:id="critSpecial"  text="○  At least 1 special char (!@#$%...)"   styleClass="label-secondary" wrapText="true"/>
+                <Label fx:id="critNoSpaces" text="○  No spaces"                             styleClass="label-secondary"/>
+            </VBox>
+
+            <Separator/>
+
+            <Label text="Example strong password:" styleClass="label-muted"/>
+            <Label text="Garden@2024!" styleClass="text-accent"/>
+        </VBox>
+
+    </HBox>
+</StackPane>

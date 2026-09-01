@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.agrosense.ui.AccountController"
+      spacing="0" styleClass="content-area">
+
+    <!-- Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="2">
+            <Label text="My Account" styleClass="title-large"/>
+            <Label text="Profile information and paired devices" styleClass="label-secondary"/>
+        </VBox>
+    </HBox>
+
+    <Region prefHeight="20"/>
+
+    <HBox spacing="20" alignment="TOP_LEFT" VBox.vgrow="ALWAYS">
+
+        <!-- Profile card -->
+        <VBox styleClass="card" spacing="16" prefWidth="360">
+            <Label text="👤 Profile" styleClass="title-medium"/>
+
+            <VBox spacing="6">
+                <Label text="Full Name" styleClass="field-label"/>
+                <TextField fx:id="nameField" styleClass="text-field"/>
+            </VBox>
+            <VBox spacing="6">
+                <Label text="Phone" styleClass="field-label"/>
+                <TextField fx:id="phoneField" styleClass="text-field"/>
+            </VBox>
+            <VBox spacing="6">
+                <Label text="Email" styleClass="field-label"/>
+                <TextField fx:id="emailField" styleClass="text-field" editable="false"
+                           style="-fx-opacity: 0.6;"/>
+            </VBox>
+            <Label fx:id="profileError" styleClass="error-label" text="" visible="false" managed="false"/>
+            <Button text="Save Changes" styleClass="btn-primary" onAction="#onSaveProfile"/>
+        </VBox>
+
+        <!-- Paired devices -->
+        <VBox spacing="16" HBox.hgrow="ALWAYS">
+            <Label text="📡 My Paired Devices" styleClass="title-medium"/>
+            <TableView fx:id="devicesTable" VBox.vgrow="ALWAYS" styleClass="table-view">
+                <columns>
+                    <TableColumn fx:id="colSerial"  text="SERIAL"       prefWidth="130"/>
+                    <TableColumn fx:id="colSite"    text="SITE"         prefWidth="160"/>
+                    <TableColumn fx:id="colStatus"  text="STATUS"       prefWidth="110"/>
+                    <TableColumn fx:id="colPaired"  text="PAIRED DATE"  prefWidth="160"/>
+                    <TableColumn fx:id="colUnpair"  text=""             prefWidth="110"/>
+                </columns>
+            </TableView>
+        </VBox>
+
+    </HBox>
+</VBox>

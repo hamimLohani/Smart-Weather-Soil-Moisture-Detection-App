@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.agrosense.ui.AlertHistoryController"
+      spacing="0" styleClass="content-area">
+
+    <!-- Header -->
+    <HBox styleClass="page-header" alignment="CENTER_LEFT" spacing="12">
+        <VBox spacing="2">
+            <Label text="Alert History" styleClass="title-large"/>
+            <Label text="View and manage all your alerts" styleClass="label-secondary"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <!-- Status filter -->
+        <Label text="Filter:" styleClass="label-secondary"/>
+        <ComboBox fx:id="statusFilter" styleClass="combo-box" prefWidth="160"
+                  onAction="#onFilterChanged"/>
+        <Button text="Refresh" styleClass="btn-secondary" onAction="#onRefresh"/>
+    </HBox>
+
+    <Region prefHeight="16"/>
+
+    <TableView fx:id="alertTable" VBox.vgrow="ALWAYS" styleClass="table-view">
+        <columns>
+            <TableColumn fx:id="colDevice"     text="DEVICE"          prefWidth="130"/>
+            <TableColumn fx:id="colRule"       text="RULE"            prefWidth="200"/>
+            <TableColumn fx:id="colValue"      text="TRIGGERED VALUE" prefWidth="140"/>
+            <TableColumn fx:id="colStatus"     text="STATUS"          prefWidth="120"/>
+            <TableColumn fx:id="colTime"       text="TIME"            prefWidth="170"/>
+            <TableColumn fx:id="colActions"    text="ACTIONS"         prefWidth="200"/>
+        </columns>
+    </TableView>
+
+</VBox>
