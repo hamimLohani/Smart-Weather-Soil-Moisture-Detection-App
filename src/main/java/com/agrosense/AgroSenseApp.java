@@ -68,11 +68,11 @@ public class AgroSenseApp extends Application {
         pairingService  = new PairingService(pairingCodeDAO, deviceUnitDAO, devicePairingDAO, siteDAO);
         siteService     = new SiteService(siteDAO);
         alertRuleService= new AlertRuleService(alertRuleDAO);
-        deviceService   = new DeviceService(deviceUnitDAO, devicePairingDAO);
+        deviceService   = new DeviceService(deviceUnitDAO, devicePairingDAO, pairingCodeDAO);
 
         // Ingest server
         ingestServer = new SensorIngestServer(deviceUnitDAO, devicePairingDAO,
-            sensorReadingService, alertService);
+            sensorReadingService, alertService, pairingCodeDAO);
         try {
             ingestServer.start();
         } catch (IOException e) {

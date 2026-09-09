@@ -2,8 +2,10 @@ package com.agrosense.service;
 
 import com.agrosense.dao.DevicePairingDAO;
 import com.agrosense.dao.DeviceUnitDAO;
+import com.agrosense.dao.PairingCodeDAO;
 import com.agrosense.model.DeviceUnit;
 import com.agrosense.model.DevicePairing;
+import com.agrosense.model.PairingCodeStatus;
 import com.agrosense.state.PairedState;
 
 import java.sql.SQLException;
@@ -18,10 +20,12 @@ public class DeviceService {
 
     private final DeviceUnitDAO deviceUnitDAO;
     private final DevicePairingDAO devicePairingDAO;
+    private final PairingCodeDAO pairingCodeDAO;
 
-    public DeviceService(DeviceUnitDAO deviceUnitDAO, DevicePairingDAO devicePairingDAO) {
+    public DeviceService(DeviceUnitDAO deviceUnitDAO, DevicePairingDAO devicePairingDAO, PairingCodeDAO pairingCodeDAO) {
         this.deviceUnitDAO = deviceUnitDAO;
         this.devicePairingDAO = devicePairingDAO;
+        this.pairingCodeDAO = pairingCodeDAO;
     }
 
     /** Returns all devices actively paired to the given customer. */
@@ -50,8 +54,8 @@ public class DeviceService {
     }
 
     /**
-     * Unpairs a device: deactivates the DevicePairing record and transitions
-     * DeviceUnit state PAIRED → UNPAIRED.
+     * Unpairs a device: deactivates the DevicePairing record, transitions
+     * DeviceUnit state PAIRED → UNPAIRED, and resets the hardware pairing code to UNUSED.
      */
     public void unpairDevice(int devicePairingId) throws SQLException {
         DevicePairing pairing = devicePairingDAO.findById(devicePairingId).orElseThrow();
@@ -59,6 +63,9 @@ public class DeviceService {
         var state = new PairedState();
         var next = state.unpair();
         deviceUnitDAO.updateStatus(pairing.getDeviceUnitId(), next.getStatus());
+        
+        // Reset the hardware pairing code back to UNUSED so the device can be re-paired
+        pairingCodeDAO.markStatusByDeviceUnitId(pairing.getDeviceUnitId(), PairingCodeStatus.UNUSED);
     }
 
     /** Returns the active pairing for a device, if any. */

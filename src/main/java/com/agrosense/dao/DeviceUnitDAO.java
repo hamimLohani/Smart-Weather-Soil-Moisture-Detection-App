@@ -73,6 +73,20 @@ public class DeviceUnitDAO {
         }
     }
 
+    public int insert(String serialNumber) throws SQLException {
+        String sql = "INSERT INTO DeviceUnit(serial_number, product_id, status, dry_calibration_value, wet_calibration_value) " +
+                     "VALUES(?, 1, 'UNPAIRED', 820, 380)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, serialNumber);
+            ps.executeUpdate();
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) return rs.getInt(1);
+            }
+        }
+        throw new SQLException("Failed to insert new DeviceUnit");
+    }
+
     private DeviceUnit map(ResultSet rs) throws SQLException {
         String ts = rs.getString("last_seen");
         LocalDateTime lastSeen = ts != null ? LocalDateTime.parse(ts.replace(" ", "T")) : null;

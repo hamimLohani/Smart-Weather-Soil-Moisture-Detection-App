@@ -60,14 +60,7 @@
 
         <Region prefHeight="24"/>
 
-        <!-- Demo hint -->
-        <VBox styleClass="info-banner" spacing="4" maxWidth="360">
-            <Label text="💡 Demo accounts" styleClass="text-accent"/>
-            <Label text="Email:    alice@example.com  |  bob@example.com"
-                   styleClass="label-muted"/>
-            <Label text="Password: Demo@Agro#1"
-                   styleClass="label-muted"/>
-        </VBox>
+
 
     </VBox>
 

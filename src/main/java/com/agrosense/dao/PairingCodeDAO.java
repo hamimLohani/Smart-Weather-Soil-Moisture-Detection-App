@@ -41,6 +41,27 @@ public class PairingCodeDAO {
         }
     }
 
+    public void markStatusByDeviceUnitId(int deviceUnitId, PairingCodeStatus status) throws SQLException {
+        String sql = "UPDATE PairingCode SET status=? WHERE device_unit_id=?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status.name());
+            ps.setInt(2, deviceUnitId);
+            ps.executeUpdate();
+        }
+    }
+
+    public void insert(String code, int deviceUnitId) throws SQLException {
+        String sql = "INSERT INTO PairingCode(code, device_unit_id, status, generated_date) " +
+                     "VALUES(?, ?, 'UNUSED', CURRENT_DATE)";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setInt(2, deviceUnitId);
+            ps.executeUpdate();
+        }
+    }
+
     private PairingCode map(ResultSet rs) throws SQLException {
         String usedStr = rs.getString("used_date");
         return new PairingCode(

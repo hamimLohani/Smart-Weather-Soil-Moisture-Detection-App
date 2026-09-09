@@ -2,6 +2,7 @@ package com.agrosense.ingest;
 
 import com.agrosense.dao.DevicePairingDAO;
 import com.agrosense.dao.DeviceUnitDAO;
+import com.agrosense.dao.PairingCodeDAO;
 
 import com.agrosense.model.*;
 import com.agrosense.service.AlertService;
@@ -47,6 +48,7 @@ public class SensorIngestServer {
     private final DevicePairingDAO devicePairingDAO;
     private final SensorReadingService sensorReadingService;
     private final AlertService alertService;
+    private final PairingCodeDAO pairingCodeDAO;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private HttpServer server;
@@ -54,11 +56,13 @@ public class SensorIngestServer {
     public SensorIngestServer(DeviceUnitDAO deviceUnitDAO,
                                DevicePairingDAO devicePairingDAO,
                                SensorReadingService sensorReadingService,
-                               AlertService alertService) {
+                               AlertService alertService,
+                               PairingCodeDAO pairingCodeDAO) {
         this.deviceUnitDAO = deviceUnitDAO;
         this.devicePairingDAO = devicePairingDAO;
         this.sensorReadingService = sensorReadingService;
         this.alertService = alertService;
+        this.pairingCodeDAO = pairingCodeDAO;
     }
 
     public void start() throws IOException {
@@ -94,7 +98,7 @@ public class SensorIngestServer {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             if (!"POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-                respond(exchange, 405, "Method Not Allowed");
+                respond(exchange, 405, "{\"error\":\"Method not allowed. Use POST.\"}" );
                 return;
             }
 
@@ -103,26 +107,67 @@ public class SensorIngestServer {
                 body = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }
 
+            // --- Step 1: Parse JSON ---
+            JsonNode json;
             try {
-                JsonNode json = mapper.readTree(body);
+                json = mapper.readTree(body);
+                if (json == null || !json.isObject()) {
+                    respond(exchange, 400, "{\"error\":\"Invalid JSON body.\"}" );
+                    return;
+                }
+            } catch (Exception e) {
+                LOG.warning("[Ingest] Malformed JSON received: " + e.getMessage());
+                respond(exchange, 400, "{\"error\":\"Malformed JSON body.\"}" );
+                return;
+            }
 
-                String deviceId       = json.get("device_id").asText();
-                double temperature    = json.get("temperature").asDouble();
-                double humidity       = json.get("humidity").asDouble();
-                int soilRaw           = json.get("soil_moisture_raw").asInt();
+            // --- Step 2: Validate required fields ---
+            if (json.get("device_id") == null || json.get("device_id").asText().isBlank()) {
+                respond(exchange, 400, "{\"error\":\"Missing required field: device_id.\"}" );
+                return;
+            }
+            if (json.get("temperature") == null) {
+                respond(exchange, 400, "{\"error\":\"Missing required field: temperature.\"}" );
+                return;
+            }
+            if (json.get("humidity") == null) {
+                respond(exchange, 400, "{\"error\":\"Missing required field: humidity.\"}" );
+                return;
+            }
+            if (json.get("soil_moisture_raw") == null) {
+                respond(exchange, 400, "{\"error\":\"Missing required field: soil_moisture_raw.\"}" );
+                return;
+            }
+
+            // --- Step 3: Extract values ---
+            try {
+                String deviceId    = json.get("device_id").asText();
+                double temperature = json.get("temperature").asDouble();
+                double humidity    = json.get("humidity").asDouble();
+                int soilRaw        = json.get("soil_moisture_raw").asInt();
 
                 // 1. Look up device
                 Optional<DeviceUnit> deviceOpt = deviceUnitDAO.findBySerialNumber(deviceId);
+                
+                // AUTO-REGISTRATION: If device doesn't exist and firmware provided pairing_code, register it!
                 if (deviceOpt.isEmpty()) {
-                    respond(exchange, 404, "{\"error\":\"Device not found\"}");
-                    return;
+                    if (json.has("pairing_code") && !json.get("pairing_code").asText().isBlank()) {
+                        String pairingCode = json.get("pairing_code").asText();
+                        int newUnitId = deviceUnitDAO.insert(deviceId);
+                        pairingCodeDAO.insert(pairingCode, newUnitId);
+                        LOG.info("[Ingest] Auto-registered new device: " + deviceId);
+                        deviceOpt = deviceUnitDAO.findById(newUnitId);
+                    } else {
+                        respond(exchange, 404, "{\"error\":\"Device not found.\"}" );
+                        return;
+                    }
                 }
                 DeviceUnit device = deviceOpt.get();
 
                 // 2. Verify active pairing (403 if unpaired)
                 Optional<?> pairingOpt = devicePairingDAO.findActiveByDeviceUnit(device.getId());
                 if (pairingOpt.isEmpty()) {
-                    respond(exchange, 403, "{\"error\":\"Device is not paired to any customer\"}");
+                    respond(exchange, 403, "{\"error\":\"Device is not paired to any customer.\"}" );
                     return;
                 }
 
@@ -152,8 +197,8 @@ public class SensorIngestServer {
                 respond(exchange, 200, "{\"status\":\"ok\"}");
 
             } catch (Exception e) {
-                LOG.severe("[Ingest] Error processing reading: " + e.getMessage());
-                respond(exchange, 400, "{\"error\":\"" + e.getMessage() + "\"}");
+                LOG.severe("[Ingest] Unexpected error processing reading: " + e.getMessage());
+                respond(exchange, 500, "{\"error\":\"Internal server error. Please try again.\"}" );
             }
         }
 

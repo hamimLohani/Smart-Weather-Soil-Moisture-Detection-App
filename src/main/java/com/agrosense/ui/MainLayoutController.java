@@ -16,6 +16,16 @@ import java.io.IOException;
  */
 public class MainLayoutController {
 
+    private static MainLayoutController instance;
+
+    public MainLayoutController() {
+        instance = this;
+    }
+
+    public static MainLayoutController getInstance() {
+        return instance;
+    }
+
     @FXML private StackPane contentPane;
     @FXML private Button navDashboard;
     @FXML private Button navPairing;
@@ -30,11 +40,11 @@ public class MainLayoutController {
         updateThemeButtonText();
     }
 
-    @FXML private void showDashboard()    { loadView("dashboard",    navDashboard); }
-    @FXML private void showPairing()      { loadView("pairing",      navPairing); }
-    @FXML private void showAlertRules()   { loadView("alert_rules",  navAlerts); }
-    @FXML private void showAlertHistory() { loadView("alert_history",navHistory); }
-    @FXML private void showAccount()      { loadView("account",      navAccount); }
+    @FXML public void showDashboard()    { loadView("dashboard",    navDashboard); }
+    @FXML public void showPairing()      { loadView("pairing",      navPairing); }
+    @FXML public void showAlertRules()   { loadView("alert_rules",  navAlerts); }
+    @FXML public void showAlertHistory() { loadView("alert_history",navHistory); }
+    @FXML public void showAccount()      { loadView("account",      navAccount); }
 
     @FXML
     private void onSignOut() {

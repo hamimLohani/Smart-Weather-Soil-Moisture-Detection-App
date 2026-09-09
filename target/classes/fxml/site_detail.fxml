@@ -38,12 +38,12 @@
         <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4" alignment="CENTER">
             <Label text="💧 Humidity" styleClass="metric-label"/>
             <Label fx:id="humLabel" text="—" styleClass="metric-value"/>
-            <Label text="%" styleClass="label-secondary"/>
+            <Label text="\%" styleClass="label-secondary"/>
         </VBox>
         <VBox styleClass="card" HBox.hgrow="ALWAYS" spacing="4" alignment="CENTER">
             <Label text="🌱 Soil Moisture" styleClass="metric-label"/>
             <Label fx:id="soilLabel" text="—" styleClass="metric-value"/>
-            <Label text="%" styleClass="label-secondary"/>
+            <Label text="\%" styleClass="label-secondary"/>
         </VBox>
     </HBox>
 

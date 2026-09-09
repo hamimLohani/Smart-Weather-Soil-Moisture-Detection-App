@@ -52,9 +52,9 @@ public class DashboardController {
 
     @FXML
     private void onPairDevice() {
-        // Navigate to pairing via the parent main_layout nav
-        // (Simplified: re-load pairing fxml into scene root via App)
-        AgroSenseApp.navigateTo("main_layout");
+        if (MainLayoutController.getInstance() != null) {
+            MainLayoutController.getInstance().showPairing();
+        }
     }
 
     private void loadSites() {
