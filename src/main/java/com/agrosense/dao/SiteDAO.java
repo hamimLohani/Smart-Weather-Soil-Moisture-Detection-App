@@ -64,11 +64,37 @@ public class SiteDAO {
     }
 
     public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM Site WHERE id=?";
-        try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
+        try (Connection conn = DatabaseManager.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // 1. Delete AlertEvents for any AlertRule associated with this site
+                try (PreparedStatement ps = conn.prepareStatement(
+                        "DELETE FROM AlertEvent WHERE alert_rule_id IN (SELECT id FROM AlertRule WHERE site_id = ?)")) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+                // 2. Delete AlertRules associated with this site
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM AlertRule WHERE site_id = ?")) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+                // 3. Delete DevicePairings associated with this site
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM DevicePairing WHERE site_id = ?")) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+                // 4. Delete the Site
+                try (PreparedStatement ps = conn.prepareStatement("DELETE FROM Site WHERE id = ?")) {
+                    ps.setInt(1, id);
+                    ps.executeUpdate();
+                }
+                conn.commit();
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
         }
     }
 

@@ -59,13 +59,25 @@ public class DeviceService {
      */
     public void unpairDevice(int devicePairingId) throws SQLException {
         DevicePairing pairing = devicePairingDAO.findById(devicePairingId).orElseThrow();
+        int deviceId = pairing.getDeviceUnitId();
+        
+        // 1. Delete associated SensorReadings and AlertEvents to clear history
+        try (java.sql.Connection conn = com.agrosense.dao.DatabaseManager.getConnection();
+             java.sql.PreparedStatement ps1 = conn.prepareStatement("DELETE FROM SensorReading WHERE device_unit_id = ?");
+             java.sql.PreparedStatement ps2 = conn.prepareStatement("DELETE FROM AlertEvent WHERE device_unit_id = ?")) {
+             ps1.setInt(1, deviceId);
+             ps1.executeUpdate();
+             ps2.setInt(1, deviceId);
+             ps2.executeUpdate();
+        }
+
         devicePairingDAO.deactivate(devicePairingId);
         var state = new PairedState();
         var next = state.unpair();
-        deviceUnitDAO.updateStatus(pairing.getDeviceUnitId(), next.getStatus());
+        deviceUnitDAO.updateStatus(deviceId, next.getStatus());
         
         // Reset the hardware pairing code back to UNUSED so the device can be re-paired
-        pairingCodeDAO.markStatusByDeviceUnitId(pairing.getDeviceUnitId(), PairingCodeStatus.UNUSED);
+        pairingCodeDAO.markStatusByDeviceUnitId(deviceId, PairingCodeStatus.UNUSED);
     }
 
     /** Returns the active pairing for a device, if any. */

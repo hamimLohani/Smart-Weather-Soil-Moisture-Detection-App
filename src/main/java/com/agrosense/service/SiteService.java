@@ -35,8 +35,6 @@ public class SiteService {
     }
 
     public void deleteSite(int siteId) throws SQLException {
-        // Must delete device pairings first to satisfy foreign key constraints
-        devicePairingDAO.deleteBySite(siteId);
         siteDAO.delete(siteId);
     }
 }
