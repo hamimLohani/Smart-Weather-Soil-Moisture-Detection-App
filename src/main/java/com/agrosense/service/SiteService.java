@@ -11,9 +11,11 @@ import java.util.Optional;
 public class SiteService {
 
     private final SiteDAO siteDAO;
+    private final com.agrosense.dao.DevicePairingDAO devicePairingDAO;
 
-    public SiteService(SiteDAO siteDAO) {
+    public SiteService(SiteDAO siteDAO, com.agrosense.dao.DevicePairingDAO devicePairingDAO) {
         this.siteDAO = siteDAO;
+        this.devicePairingDAO = devicePairingDAO;
     }
 
     public List<Site> getSitesForCustomer(int customerId) throws SQLException {
@@ -33,6 +35,8 @@ public class SiteService {
     }
 
     public void deleteSite(int siteId) throws SQLException {
+        // Must delete device pairings first to satisfy foreign key constraints
+        devicePairingDAO.deleteBySite(siteId);
         siteDAO.delete(siteId);
     }
 }

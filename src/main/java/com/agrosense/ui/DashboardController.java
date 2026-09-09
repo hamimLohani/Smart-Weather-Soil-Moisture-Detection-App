@@ -12,6 +12,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,6 +29,8 @@ public class DashboardController {
     @FXML private ListView<String> recentAlertsList;
 
 
+
+    private Timeline refreshTimeline;
 
     @FXML
     public void initialize() {
@@ -48,6 +54,18 @@ public class DashboardController {
                 }
             });
         });
+        
+        // Auto-refresh the dashboard every 10 seconds for real-time updates
+        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> loadSites()));
+        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        refreshTimeline.play();
+        
+        // Stop timeline if node is removed from scene
+        sitesContainer.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null && refreshTimeline != null) {
+                refreshTimeline.stop();
+            }
+        });
     }
 
     @FXML
@@ -55,6 +73,11 @@ public class DashboardController {
         if (MainLayoutController.getInstance() != null) {
             MainLayoutController.getInstance().showPairing();
         }
+    }
+
+    @FXML
+    private void onReload() {
+        loadSites();
     }
 
     private void loadSites() {
@@ -85,12 +108,37 @@ public class DashboardController {
         card.setPadding(new Insets(16));
 
         // Site name + profile badge
-        HBox header = new HBox(8);
-        Label nameLabel = new Label(site.getName());
-        nameLabel.getStyleClass().add("title-medium");
-        Label profileBadge = new Label(site.getUseCaseProfile() == UseCaseProfile.FARM ? "🌾 FARM" : "🏡 HOME");
-        profileBadge.getStyleClass().add(site.getUseCaseProfile() == UseCaseProfile.FARM ? "badge-farm" : "badge-home");
-        header.getChildren().addAll(nameLabel, profileBadge);
+        HBox header = new HBox(12);
+        header.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        Label name = new Label(site.getName());
+        name.getStyleClass().add("card-title");
+        
+        java.util.Optional<Integer> activeDeviceOpt = getActiveDevice(site);
+        boolean hasActiveDevice = activeDeviceOpt.isPresent();
+
+        Label profileBadge = new Label(site.getUseCaseProfile().name());
+        profileBadge.getStyleClass().addAll("badge", 
+            hasActiveDevice ? "badge-profile" : "badge-resolved");
+            
+        header.getChildren().addAll(name, profileBadge);
+
+        if (!hasActiveDevice) {
+            Label unpairedBadge = new Label("Unpaired");
+            unpairedBadge.getStyleClass().addAll("badge", "badge-resolved");
+            unpairedBadge.setTextFill(Color.GRAY);
+            header.getChildren().add(unpairedBadge);
+        } else {
+            int deviceId = activeDeviceOpt.get();
+            boolean isOnline = AgroSenseApp.sensorReadingService.isOnline(deviceId);
+            Label statusBadge = new Label(isOnline ? "🟢 Online" : "🔴 Offline");
+            statusBadge.getStyleClass().addAll("badge", isOnline ? "badge-resolved" : "badge-open");
+            header.getChildren().add(statusBadge);
+            
+            if (site.getUseCaseProfile() == UseCaseProfile.HOME) {
+                Label attention = labelWithStyle("🏡 HOME", "badge-profile");
+                header.getChildren().add(attention);
+            }
+        }
 
         // FARM attention badge
         boolean needsAttention = AgroSenseApp.alertService.getSitesNeedingAttention().contains(site.getId());
@@ -117,9 +165,47 @@ public class DashboardController {
         Button detailBtn = new Button("View Details →");
         detailBtn.getStyleClass().add("btn-secondary");
         detailBtn.setOnAction(e -> openSiteDetail(site));
+        
+        HBox buttonBox = new HBox(10, detailBtn);
+        
+        if (!hasActiveDevice) {
+            Button deleteBtn = new Button("Delete Site");
+            deleteBtn.getStyleClass().add("btn-secondary");
+            deleteBtn.setStyle("-fx-text-fill: #ff6b6b;");
+            deleteBtn.setOnAction(e -> deleteSite(site));
+            buttonBox.getChildren().add(deleteBtn);
+        }
 
-        card.getChildren().addAll(header, new Separator(), metrics, alertLabel, detailBtn);
+        card.getChildren().addAll(header, new Separator(), metrics, alertLabel, buttonBox);
         return card;
+    }
+    
+    private java.util.Optional<Integer> getActiveDevice(Site site) {
+        try {
+            List<DevicePairing> pairings = AgroSenseApp.deviceService.getPairingsForCustomer(
+                SessionManager.getInstance().getCurrentCustomer().getId());
+            for (DevicePairing p : pairings) {
+                if (p.getSiteId() == site.getId() && p.isActive()) {
+                    return java.util.Optional.of(p.getDeviceUnitId());
+                }
+            }
+        } catch (SQLException e) { /* ignore */ }
+        return java.util.Optional.empty();
+    }
+    
+    private void deleteSite(Site site) {
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION,
+            "Are you sure you want to completely delete site '" + site.getName() + "' and its history?", 
+            ButtonType.YES, ButtonType.NO);
+        confirm.showAndWait().ifPresent(result -> {
+            if (result == ButtonType.YES) {
+                try {
+                    // This relies on the database ON DELETE CASCADE or the service to clean up
+                    AgroSenseApp.siteService.deleteSite(site.getId());
+                    loadSites();
+                } catch (Exception ex) { ex.printStackTrace(); }
+            }
+        });
     }
 
     private void addMetric(GridPane grid, int row, String label, String value, String unit) {

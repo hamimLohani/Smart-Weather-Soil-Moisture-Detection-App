@@ -58,17 +58,16 @@ public class AgroSenseApp extends Application {
 
         // Services
         sensorReadingService = new SensorReadingService(sensorReadingDAO);
-        alertService = new AlertService(alertRuleDAO, alertEventDAO, devicePairingDAO, siteDAO);
+        alertService         = new AlertService(alertRuleDAO, alertEventDAO, devicePairingDAO, siteDAO);
+        siteService          = new SiteService(siteDAO, devicePairingDAO);
+        alertRuleService     = new AlertRuleService(alertRuleDAO);
+        authService          = new AuthService(customerDAO);
+        pairingService       = new PairingService(pairingCodeDAO, deviceUnitDAO, devicePairingDAO, siteDAO);
+        deviceService        = new DeviceService(deviceUnitDAO, devicePairingDAO, pairingCodeDAO);
 
         // Wire observers
         alertService.addObserver(new DashboardAlertObserver(liveAlerts));
         alertService.addObserver(new LogAlertObserver());
-
-        authService     = new AuthService(customerDAO);
-        pairingService  = new PairingService(pairingCodeDAO, deviceUnitDAO, devicePairingDAO, siteDAO);
-        siteService     = new SiteService(siteDAO);
-        alertRuleService= new AlertRuleService(alertRuleDAO);
-        deviceService   = new DeviceService(deviceUnitDAO, devicePairingDAO, pairingCodeDAO);
 
         // Ingest server
         ingestServer = new SensorIngestServer(deviceUnitDAO, devicePairingDAO,

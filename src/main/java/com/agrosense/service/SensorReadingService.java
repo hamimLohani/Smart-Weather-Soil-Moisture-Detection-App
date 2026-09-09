@@ -24,6 +24,16 @@ public class SensorReadingService {
     public Optional<SensorReading> getLatest(int deviceUnitId, ReadingType type) throws SQLException {
         return sensorReadingDAO.findLatest(deviceUnitId, type);
     }
+    
+    public boolean isOnline(int deviceUnitId) {
+        try {
+            return getLatest(deviceUnitId, ReadingType.TEMPERATURE)
+                .map(r -> r.getTimestamp() != null && r.getTimestamp().isAfter(LocalDateTime.now(java.time.ZoneOffset.UTC).minusMinutes(2)))
+                .orElse(false);
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 
     public List<SensorReading> getHistory(int deviceUnitId, ReadingType type,
                                           LocalDateTime from, LocalDateTime to) throws SQLException {

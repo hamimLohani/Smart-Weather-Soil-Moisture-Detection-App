@@ -90,6 +90,15 @@ public class DevicePairingDAO {
             ps.executeUpdate();
         }
     }
+    
+    public void deleteBySite(int siteId) throws SQLException {
+        String sql = "DELETE FROM DevicePairing WHERE site_id=?";
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, siteId);
+            ps.executeUpdate();
+        }
+    }
 
     private DevicePairing map(ResultSet rs) throws SQLException {
         String pd = rs.getString("paired_date");
