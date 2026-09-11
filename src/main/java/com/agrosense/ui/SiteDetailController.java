@@ -4,9 +4,12 @@ import com.agrosense.AgroSenseApp;
 import com.agrosense.model.*;
 import com.agrosense.session.SessionManager;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.*;
+import javafx.util.Duration;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -30,6 +33,7 @@ public class SiteDetailController {
     private Site site;
     private int deviceUnitId = -1;
     private static final DateTimeFormatter FMT_AXIS = DateTimeFormatter.ofPattern("MM/dd HH:mm");
+    private Timeline refreshTimeline;
 
 
     public void setSite(Site site) {
@@ -44,6 +48,26 @@ public class SiteDetailController {
         resolveDeviceId();
         loadLatestReadings();
         onLoadChart();
+
+        startAutoRefresh();
+    }
+
+    private void startAutoRefresh() {
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
+        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> {
+            loadLatestReadings();
+            onLoadChart();
+        }));
+        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
+        refreshTimeline.play();
+
+        readingsChart.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene == null && refreshTimeline != null) {
+                refreshTimeline.stop();
+            }
+        });
     }
 
     private void resolveDeviceId() {
@@ -105,6 +129,9 @@ public class SiteDetailController {
 
     @FXML
     private void goBack() {
+        if (refreshTimeline != null) {
+            refreshTimeline.stop();
+        }
         AgroSenseApp.navigateTo("main_layout");
     }
 }

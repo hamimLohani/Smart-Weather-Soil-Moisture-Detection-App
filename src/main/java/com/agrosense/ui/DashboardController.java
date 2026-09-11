@@ -153,7 +153,7 @@ public class DashboardController {
         metrics.setHgap(16); metrics.setVgap(8);
         addMetric(metrics, 0, "🌡 Temp", getLatestReading(site, ReadingType.TEMPERATURE), "°C");
         addMetric(metrics, 1, "💧 Humidity", getLatestReading(site, ReadingType.HUMIDITY), "%");
-        addMetric(metrics, 2, "🌱 Soil", getLatestReading(site, ReadingType.SOIL_MOISTURE), "%");
+        addMetric(metrics, 2, "🌱 Soil Moisture", getLatestReading(site, ReadingType.SOIL_MOISTURE), "%");
 
         // Open alerts
         int openAlerts = getOpenAlertCount(site);
