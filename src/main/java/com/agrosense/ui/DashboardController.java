@@ -55,8 +55,8 @@ public class DashboardController {
             });
         });
         
-        // Auto-refresh the dashboard every 10 seconds for real-time updates
-        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(10), e -> loadSites()));
+        // Auto-refresh the dashboard every 2 seconds for real-time updates
+        refreshTimeline = new Timeline(new KeyFrame(Duration.seconds(2), e -> loadSites()));
         refreshTimeline.setCycleCount(Timeline.INDEFINITE);
         refreshTimeline.play();
         

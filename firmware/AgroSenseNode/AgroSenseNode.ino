@@ -47,7 +47,7 @@ char serverIp[MAX_IP_LEN];
 int consecutiveFailures = 0;
 
 unsigned long lastReadingTime = 0;
-const unsigned long READING_INTERVAL = 30000; // 30 seconds
+const unsigned long READING_INTERVAL = 2000; // 2 seconds
 
 // --- Function Prototypes ---
 void generateDeviceIdentity();

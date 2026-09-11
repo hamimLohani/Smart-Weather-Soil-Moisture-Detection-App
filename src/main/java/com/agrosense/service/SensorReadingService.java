@@ -27,9 +27,14 @@ public class SensorReadingService {
     
     public boolean isOnline(int deviceUnitId) {
         try {
-            return getLatest(deviceUnitId, ReadingType.TEMPERATURE)
-                .map(r -> r.getTimestamp() != null && r.getTimestamp().isAfter(LocalDateTime.now(java.time.ZoneOffset.UTC).minusMinutes(2)))
-                .orElse(false);
+            Optional<SensorReading> latest = getLatest(deviceUnitId, ReadingType.TEMPERATURE);
+            if (latest.isPresent() && latest.get().getTimestamp() != null) {
+                LocalDateTime ts = latest.get().getTimestamp();
+                LocalDateTime now = LocalDateTime.now();
+                // Device sends reading every 2s; if no reading in 5s, mark offline
+                return ts.isAfter(now.minusSeconds(5)) && !ts.isAfter(now.plusSeconds(5));
+            }
+            return false;
         } catch (SQLException e) {
             return false;
         }

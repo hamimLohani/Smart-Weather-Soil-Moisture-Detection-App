@@ -33,6 +33,10 @@ public class MainLayoutController {
     @FXML private Button navHistory;
     @FXML private Button navAccount;
     @FXML private Button themeToggleButton;
+    @FXML private Button reloadButton;
+
+    private String currentView = "dashboard";
+    private Button currentNavButton;
 
     @FXML
     public void initialize() {
@@ -40,11 +44,27 @@ public class MainLayoutController {
         updateThemeButtonText();
     }
 
-    @FXML public void showDashboard()    { loadView("dashboard",    navDashboard); }
-    @FXML public void showPairing()      { loadView("pairing",      navPairing); }
-    @FXML public void showAlertRules()   { loadView("alert_rules",  navAlerts); }
-    @FXML public void showAlertHistory() { loadView("alert_history",navHistory); }
-    @FXML public void showAccount()      { loadView("account",      navAccount); }
+    @FXML public void showDashboard()    { loadView("dashboard",     navDashboard); }
+    @FXML public void showPairing()      { loadView("pairing",       navPairing); }
+    @FXML public void showAlertRules()   { loadView("alert_rules",   navAlerts); }
+    @FXML public void showAlertHistory() { loadView("alert_history", navHistory); }
+    @FXML public void showAccount()      { loadView("account",       navAccount); }
+
+    @FXML
+    private void onReload() {
+        // Brief visual feedback — spin label
+        reloadButton.setText("⏳  Reloading...");
+        reloadButton.setDisable(true);
+        javafx.application.Platform.runLater(() -> {
+            if (currentNavButton != null) {
+                loadView(currentView, currentNavButton);
+            } else {
+                showDashboard();
+            }
+            reloadButton.setText("🔄  Reload");
+            reloadButton.setDisable(false);
+        });
+    }
 
     @FXML
     private void onSignOut() {
@@ -65,12 +85,15 @@ public class MainLayoutController {
     }
 
     private void loadView(String fxmlName, Button activeButton) {
+        currentView      = fxmlName;
+        currentNavButton = activeButton;
+
         // Reset all nav buttons
         for (Button b : new Button[]{navDashboard, navPairing, navAlerts, navHistory, navAccount}) {
             b.getStyleClass().removeAll("nav-button-active");
             if (!b.getStyleClass().contains("nav-button")) b.getStyleClass().add("nav-button");
         }
-        activeButton.getStyleClass().add("nav-button-active");
+        if (activeButton != null) activeButton.getStyleClass().add("nav-button-active");
 
         try {
             FXMLLoader loader = new FXMLLoader(

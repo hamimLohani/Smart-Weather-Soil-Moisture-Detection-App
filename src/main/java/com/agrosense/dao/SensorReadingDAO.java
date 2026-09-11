@@ -12,7 +12,7 @@ import java.util.Optional;
 public class SensorReadingDAO {
 
     public void insert(int deviceUnitId, ReadingType type, double value) throws SQLException {
-        String sql = "INSERT INTO SensorReading(device_unit_id, reading_type, value) VALUES(?,?,?)";
+        String sql = "INSERT INTO SensorReading(device_unit_id, reading_type, value, timestamp) VALUES(?,?,?, DATETIME('now', 'localtime'))";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, deviceUnitId);

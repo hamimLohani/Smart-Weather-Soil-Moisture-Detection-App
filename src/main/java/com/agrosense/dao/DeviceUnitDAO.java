@@ -65,7 +65,7 @@ public class DeviceUnitDAO {
     }
 
     public void updateLastSeen(int id) throws SQLException {
-        String sql = "UPDATE DeviceUnit SET last_seen=CURRENT_TIMESTAMP WHERE id=?";
+        String sql = "UPDATE DeviceUnit SET last_seen=DATETIME('now', 'localtime') WHERE id=?";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -75,7 +75,7 @@ public class DeviceUnitDAO {
 
     public int insert(String serialNumber) throws SQLException {
         String sql = "INSERT INTO DeviceUnit(serial_number, product_id, status, dry_calibration_value, wet_calibration_value) " +
-                     "VALUES(?, 1, 'UNPAIRED', 820, 380)";
+                     "VALUES(?, COALESCE((SELECT id FROM Product LIMIT 1), 1), 'UNPAIRED', 820, 380)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, serialNumber);

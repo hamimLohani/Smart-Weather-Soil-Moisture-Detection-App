@@ -73,6 +73,29 @@
                            styleClass="label-secondary" wrapText="true" HBox.hgrow="ALWAYS"/>
                 </HBox>
             </VBox>
+            <Separator/>
+            <Label text="🖥️ Java App Server" styleClass="title-medium"/>
+            <VBox spacing="6"
+                  style="-fx-background-color: #1a2535; -fx-background-radius: 8; -fx-padding: 12;">
+                <Label text="📶  Connect your AgroNode to the same Wi-Fi network as this computer."
+                       styleClass="label-secondary" wrapText="true"
+                       style="-fx-font-weight: bold; -fx-text-fill: #60a5fa;"/>
+                <Label text="🖥️  Enter the Server IP below into the AgroNode provisioning page."
+                       styleClass="label-secondary" wrapText="true"/>
+                <Label text="🔌  The AgroNode will POST sensor data to port 8080 every 2 seconds."
+                       styleClass="label-secondary" wrapText="true"/>
+            </VBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Server IP" styleClass="field-label" minWidth="70"/>
+                <Label fx:id="serverIpLabel"
+                       style="-fx-font-family: 'monospace'; -fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4ade80; -fx-background-color: #0f1a2a; -fx-padding: 8 14 8 14; -fx-background-radius: 6;"
+                       text="Detecting..." HBox.hgrow="ALWAYS"/>
+                <Button fx:id="copyIpButton" text="Copy" styleClass="btn-secondary"
+                        onAction="#onCopyIp" prefHeight="36"/>
+            </HBox>
+            <Label text="Endpoint: http://&lt;IP&gt;:8080/api/readings"
+                   style="-fx-font-family: 'monospace'; -fx-font-size: 12px; -fx-text-fill: #6b7280;"
+                   wrapText="true"/>
         </VBox>
 
     </HBox>

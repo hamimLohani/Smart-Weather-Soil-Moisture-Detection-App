@@ -7,8 +7,13 @@ import com.agrosense.session.SessionManager;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.sql.SQLException;
+import java.util.Collections;
 
 public class PairingController {
 
@@ -18,11 +23,53 @@ public class PairingController {
     @FXML private Label feedbackLabel;
     @FXML private Label successLabel;
     @FXML private Button pairButton;
+    @FXML private Label serverIpLabel;
+    @FXML private Button copyIpButton;
+
+    private String detectedIp = "";
 
     @FXML
     public void initialize() {
         profileCombo.setItems(FXCollections.observableArrayList(UseCaseProfile.values()));
         profileCombo.setValue(UseCaseProfile.HOME);
+        detectedIp = detectLocalIp();
+        serverIpLabel.setText(detectedIp);
+    }
+
+    /** Walks network interfaces to find the best site-local (LAN) IPv4 address. */
+    private String detectLocalIp() {
+        try {
+            for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+                if (!ni.isUp() || ni.isLoopback() || ni.isVirtual()) continue;
+                for (InetAddress addr : Collections.list(ni.getInetAddresses())) {
+                    if (addr.isSiteLocalAddress() && !addr.isLoopbackAddress()
+                            && addr.getHostAddress().contains(".")) {
+                        return addr.getHostAddress();
+                    }
+                }
+            }
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception e) {
+            return "Unable to detect";
+        }
+    }
+
+    @FXML
+    private void onCopyIp() {
+        if (detectedIp.isBlank()) return;
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        ClipboardContent content = new ClipboardContent();
+        content.putString(detectedIp);
+        clipboard.setContent(content);
+        copyIpButton.setText("Copied!");
+        copyIpButton.setDisable(true);
+        new Thread(() -> {
+            try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
+            javafx.application.Platform.runLater(() -> {
+                copyIpButton.setText("Copy");
+                copyIpButton.setDisable(false);
+            });
+        }).start();
     }
 
     @FXML
