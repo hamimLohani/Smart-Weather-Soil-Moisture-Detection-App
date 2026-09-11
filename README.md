@@ -3,6 +3,7 @@
 A JavaFX desktop application for managing a fleet of IoT weather/soil-moisture
 monitoring devices, built for the Design Patterns Lab Final Project.
 
+**[YouTube Video](https://youtu.be/mfO7GibmYR8)**
 ## Team
 
 | Name | Roll |
